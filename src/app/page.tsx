@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 type PokemonProps = {
   name: string;
   photo: string;
+  id: number;
 }
 
 export default function Home() {
@@ -30,9 +31,12 @@ export default function Home() {
         const {data} = response
         return {
           name: data.name,
-          photo: data.sprites.front_default
+          photo: data.sprites.front_default,
+          id: data.id
         }
       })
+
+      console.log(resp)
 
       setPokemon(pokemonData)
 
@@ -43,14 +47,19 @@ export default function Home() {
       setLoad(false)
   }
 }
+ 
+  const sendPokemonData = (id: number) => {
+    window.ReactNativeWebView?.postMessage(JSON.stringify({id}));
+  };
+
+  const filteredByName = searchTerm.length > 0
+  ? pokemon.filter(repo => repo.name.includes(searchTerm))
+  : pokemon
 
   useEffect(() => {
     getByPaginations()
   },[])
 
-  const filteredByName = searchTerm.length > 0
-  ? pokemon.filter(repo => repo.name.includes(searchTerm))
-  : pokemon
 
   return (
     <Container maxWidth="lg">
@@ -89,8 +98,15 @@ export default function Home() {
 
         (
           filteredByName.map((item, index) => (
-            <Grid2 size={{xs: 6, md: 3}} key={index}>
-              <CardPokemon name={item.name} photo={item.photo}/>
+            <Grid2 
+              size={{xs: 6, md: 3}} 
+              key={index} 
+              onClick={() => sendPokemonData(item.id)}
+            >
+              <CardPokemon
+                name={item.name} 
+                photo={item.photo}
+              />
             </Grid2>
           ))  
         )
