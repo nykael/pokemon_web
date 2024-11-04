@@ -43,7 +43,8 @@ export default function Home() {
       setPokemon(pokemonData)
       
     } catch (error) {
-      console.log('ops, erro ao carregar')
+      console.log('ops', error)
+      alert("opa, não conseguimos carregar sua PokéDex")
     }finally {
     
       setLoad(false)
@@ -94,7 +95,7 @@ export default function Home() {
         searchTerm && filteredByName.length === 0 ? 
         ( 
           <Box sx={{ width: '100%', textAlign: 'center', mt: 4 }}>
-            <Typography variant="h6">Nenhum Pokémon encontrado para "{searchTerm}"</Typography>
+            <Typography variant="h6">Nenhum Pokémon encontrado para &ldquo;{searchTerm}&ldquo;</Typography>
           </Box>
         )  :
 
