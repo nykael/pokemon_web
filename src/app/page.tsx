@@ -31,7 +31,6 @@ export default function Home() {
     try {
       const endPoits = Array.from({length: pokemonFetchLimit}, (_, i) => `https://pokeapi.co/api/v2/pokemon/${i + 1}`)
       const resp = await axios.all(endPoits.map((endpoint) => axios.get(endpoint)))
-      console.log(resp)
 
       const pokemonData = resp.map(response => {
         const {data} = response
@@ -44,8 +43,7 @@ export default function Home() {
       setPokemon(pokemonData)
       
     } catch (error) {
-      console.log('ops', error)
-      alert("opa, não conseguimos carregar sua PokéDex")
+      alert(`opa, não conseguimos carregar sua PokéDex: ${error}`)
     }finally {
     
       setLoad(false)
