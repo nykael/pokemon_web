@@ -1,9 +1,17 @@
 'use client'
 
-import { CardPokemon } from "@/components/cardPokemon";
-import { Box, Button, Container, Grid2, Skeleton, Stack, TextField, Typography } from "@mui/material";
-import axios from "axios";
 import { useEffect, useState } from "react";
+import { CardPokemon } from "@/components/cardPokemon";
+import axios from "axios";
+import { 
+  Box, 
+  Container, 
+  Grid2, 
+  Skeleton, 
+  TextField, 
+  Typography 
+} from "@mui/material";
+
 
 type PokemonProps = {
   name: string;
@@ -12,19 +20,16 @@ type PokemonProps = {
 }
 
 export default function Home() {
-  const [filterbyQuantity, setFilterbyQuantity] = useState(21)
   const [pokemon, setPokemon] = useState<PokemonProps []>([])
   const [searchTerm, setSearchTerm] = useState('')
-  const [load, setLoad] = useState(false)
+  const [load, setLoad] = useState(true)
+  const pokemonFetchLimit = 24
+  
 
-
-  const getByPaginations = async () => {
+  const fetchPokemonList = async () => {
     setLoad(true)
     try {
-      var endPoits = []
-      for(var i = 1; i < filterbyQuantity; i++) {
-        endPoits.push(`https://pokeapi.co/api/v2/pokemon/${i}`)
-      }
+      const endPoits = Array.from({length: pokemonFetchLimit}, (_, i) => `https://pokeapi.co/api/v2/pokemon/${i + 1}`)
       const resp = await axios.all(endPoits.map((endpoint) => axios.get(endpoint)))
 
       const pokemonData = resp.map(response => {
@@ -35,11 +40,8 @@ export default function Home() {
           id: data.id
         }
       })
-
-      console.log(resp)
-
       setPokemon(pokemonData)
-
+      
     } catch (error) {
       console.log('ops, erro ao carregar')
     }finally {
@@ -57,7 +59,7 @@ export default function Home() {
   : pokemon
 
   useEffect(() => {
-    getByPaginations()
+    fetchPokemonList()
   },[])
 
 
